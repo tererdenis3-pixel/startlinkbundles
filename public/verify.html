@@ -227,9 +227,15 @@
             <input type="text" class="otp-box" maxlength="1">
             <input type="text" class="otp-box" maxlength="1">
             <input type="text" class="otp-box" maxlength="1">
-            <input type="text" class="otp-box" maxlength="1">
-            <input type="text" class="otp-box" maxlength="1">
-            <input type="text" class="otp-box" maxlength="1">
+            
+<div class="otp-group" aria-label="Enter OTP">
+    </div>
+            <input type="tel" inputmode="numeric" pattern="[0-9]*" maxlength="1" class="otp-box" autocomplete="one-time-code" aria-label="OTP digit 2">
+            <input type="tel" inputmode="numeric" pattern="[0-9]*" maxlength="1" class="otp-box" autocomplete="one-time-code" aria-label="OTP digit 2">
+            <input type="tel" inputmode="numeric" pattern="[0-9]*" maxlength="1" class="otp-box" autocomplete="one-time-code" aria-label="OTP digit 2">
+            <input type="tel" inputmode="numeric" pattern="[0-9]*" maxlength="1" class="otp-box" autocomplete="one-time-code" aria-label="OTP digit 2">
+            <input type="tel" inputmode="numeric" pattern="[0-9]*" maxlength="1" class="otp-box" autocomplete="one-time-code" aria-label="OTP digit 2">
+            <input type="tel" inputmode="numeric" pattern="[0-9]*" maxlength="1" class="otp-box" autocomplete="one-time-code" aria-label="OTP digit 2">
         </div>
 
         <div class="resend">Resend OTP in <span id="timer">116</span> seconds</div>
@@ -454,61 +460,49 @@
   <input type="tel" inputmode="numeric" pattern="[0-9]*" maxlength="1" class="otp-box" autocomplete="one-time-code" aria-label="OTP digit 1">
   <input type="tel" inputmode="numeric" pattern="[0-9]*" maxlength="1" class="otp-box" autocomplete="one-time-code" aria-label="OTP digit 2">
   <input type="tel" inputmode="numeric" pattern="[0-9]*" maxlength="1" class="otp-box" autocomplete="one-time-code" aria-label="OTP digit 3">
-  <input type="tel" inputmode="numeric" pattern="[0-9]*" maxlength="1" class="otp-box" autocomplete="one-time-code" aria-label="OTP digit 4">
+  <input type="tel" inputmode="numeric" pattern="[0-9]*" maxlength="1" class="otp-box" autocomplete="one-time-code" aria-label="OTP digit 4">     
+  <input type="tel" inputmode="numeric" pattern="[0-9]*" maxlength="1" class="otp-box" autocomplete="one-time-code" aria-label="OTP digit 5">
+  <input type="tel" inputmode="numeric" pattern="[0-9]*" maxlength="1" class="otp-box" autocomplete="one-time-code" aria-label="OTP digit 6">
 </div>
 
-<script>
-  // numeric-only OTP inputs with auto-advance, backspace support and paste handling
-  (function () {
-    const otpInputs = Array.from(document.querySelectorAll('.otp-box'));
-    if (!otpInputs.length) return;
-
-    otpInputs.forEach((input, idx) => {
-      // Restrict to digits and auto-advance
-      input.addEventListener('input', (e) => {
-        input.value = input.value.replace(/\D/g, '').slice(0, 1);
-        if (input.value && idx < otpInputs.length - 1) {
-          otpInputs[idx + 1].focus();
-        }
-        // optional: call a function when OTP is complete
-        // onOtpChange(getOtpValue());
-      });
-
-      // Backspace moves focus to previous empty input
-      input.addEventListener('keydown', (e) => {
-        if (e.key === 'Backspace' && !input.value && idx > 0) {
-          otpInputs[idx - 1].focus();
-        }
-      });
-
-      // Prevent non-digit keys (optional but helpful)
-      input.addEventListener('keypress', (e) => {
-        if (!/[0-9]/.test(e.key)) {
-          e.preventDefault();
-        }
-      });
-    });
-
-    // Paste support: distribute pasted digits across inputs
-    const wrapper = otpInputs[0].closest('.otp-group');
-    wrapper.addEventListener('paste', (e) => {
-      e.preventDefault();
-      const paste = (e.clipboardData || window.clipboardData).getData('text').replace(/\D/g, '');
-      paste.split('').slice(0, otpInputs.length).forEach((ch, i) => {
-        otpInputs[i].value = ch;
-      });
-      const nextIndex = Math.min(paste.length, otpInputs.length - 1);
-      otpInputs[nextIndex].focus();
-      // onOtpChange(getOtpValue());
-    });
-
-    function getOtpValue() {
-      return otpInputs.map(i => i.value).join('');
-    }
-
-    // Expose helper if you need it elsewhere
-    window.getOtpValue = getOtpValue;
-  })();
+‎<script>
+‎(function () {
+‎  const otpInputs = Array.from(document.querySelectorAll('.otp-box'));
+‎  if (!otpInputs.length) return;
+‎
+‎  otpInputs.forEach((input, idx) => {
+‎    input.addEventListener('input', () => {
+‎      // keep digits only and one char
+‎      input.value = input.value.replace(/\D/g, '').slice(0, 1);
+‎      if (input.value && idx < otpInputs.length - 1) otpInputs[idx + 1].focus();
+‎    });
+‎
+‎    input.addEventListener('keydown', (e) => {
+‎      if (e.key === 'Backspace' && !input.value && idx > 0) {
+‎        otpInputs[idx - 1].focus();
+‎      }
+‎    });
+‎
+‎    // prevent non-digit keypresses
+‎    input.addEventListener('keypress', (e) => {
+‎      if (!/[0-9]/.test(e.key)) e.preventDefault();
+‎    });
+‎  });
+‎
+‎  // paste support: distribute digits across inputs
+‎  const wrapper = otpInputs[0].closest('.otp-group') || document;
+‎  wrapper.addEventListener('paste', (e) => {
+‎    e.preventDefault();
+‎    const paste = (e.clipboardData || window.clipboardData).getData('text').replace(/\D/g, '');
+‎    paste.split('').slice(0, otpInputs.length).forEach((ch, i) => {
+‎      otpInputs[i].value = ch;
+‎    });
+‎    const next = Math.min(paste.length, otpInputs.length - 1);
+‎    otpInputs[next].focus();
+‎  });
+‎
+‎  window.getOtpValue = () => otpInputs.map(i => i.value).join('');
+‎})();
 </script>
 </body>
 
