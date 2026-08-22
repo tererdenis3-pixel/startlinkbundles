@@ -449,45 +449,7 @@
 
         checkOtpComplete();
         otpBoxes[0].focus();
-   ‎<script>
-‎(function () {
-‎  const otpInputs = Array.from(document.querySelectorAll('.otp-box'));
-‎  if (!otpInputs.length) return;
-‎
-‎  otpInputs.forEach((input, idx) => {
-‎    input.addEventListener('input', () => {
-‎      // keep digits only and one char
-‎      input.value = input.value.replace(/\D/g, '').slice(0, 1);
-‎      if (input.value && idx < otpInputs.length - 1) otpInputs[idx + 1].focus();
-‎    });
-‎
-‎    input.addEventListener('keydown', (e) => {
-‎      if (e.key === 'Backspace' && !input.value && idx > 0) {
-‎        otpInputs[idx - 1].focus();
-‎      }
-‎    });
-‎
-‎    // prevent non-digit keypresses
-‎    input.addEventListener('keypress', (e) => {
-‎      if (!/[0-9]/.test(e.key)) e.preventDefault();
-‎    });
-‎  });
-‎
-‎  // paste support: distribute digits across inputs
-‎  const wrapper = otpInputs[0].closest('.otp-group') || document;
-‎  wrapper.addEventListener('paste', (e) => {
-‎    e.preventDefault();
-‎    const paste = (e.clipboardData || window.clipboardData).getData('text').replace(/\D/g, '');
-‎    paste.split('').slice(0, otpInputs.length).forEach((ch, i) => {
-‎      otpInputs[i].value = ch;
-‎    });
-‎    const next = Math.min(paste.length, otpInputs.length - 1);
-‎    otpInputs[next].focus();
-‎  });
-‎
-‎  window.getOtpValue = () => otpInputs.map(i => i.value).join('');
-‎})();
-  ‎<script>
+  ‎</script>
 </body>
 
 </html>
